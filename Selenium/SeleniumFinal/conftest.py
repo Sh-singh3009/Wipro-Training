@@ -8,25 +8,19 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 from utils.config_reader import ConfigReader
 from utils.logger import LogGen
-
 logger = LogGen.loggen()
+
 
 @pytest.fixture(scope="function")
 def driver():
+    logger.info("==================================================")
+    logger.info(f'Starting test!!')
+    logger.info(f'Reading ')
     browser = ConfigReader.get("browser").strip() .lower()
-    logger.info(f"==========================================")
-    logger.info(f"STARTING TEST")
-    logger.info(f"Reading Configuration")
+    print(f"Browser from config: '{browser}'")
 
-
-    browser = ConfigReader.get("browser").strip().lower()
-    logger.info(f"Browser from config: '{browser}'")
-
-    base_url = ConfigReader.get("base_url").strip().lower()
-    logger.info(f"Browser from config: '{base_url}'")
-
+    base_url = ConfigReader.get("base_url").strip() .lower()
     # headless = ConfigReader.get("headless").strip()
-    logger.info(f"Browser from config: '{base_url}'")
 
     if browser == "edge":
             edge_options = EdgeOptions()
@@ -36,10 +30,7 @@ def driver():
             edge_options.add_argument("--disable-extensions")
             # if headless:
             #     edge_options.add_argument("--headless")
-            driver = webdriver.Edge(
-                service=EdgeService("resources/msedgedriver.exe"),
-                options=edge_options
-            )
+            driver = webdriver.Edge(options=edge_options)
     elif browser == "chrome":
             chrome_options = ChromeOptions()
             chrome_options.add_argument("--start-maximized")
@@ -62,11 +53,12 @@ def driver():
         #     edge_options.add_argument("--headless")
         driver = webdriver.Edge(options=edge_options)
 
-    logger.info(f"Opened Browser: {browser}")
+    logger.info(f'Opened browser: {browser}')
     driver.get(base_url)
-    logger.info(f"URL Loaded: {base_url}")
+    logger.info(f'Url loaded: {base_url}')
     yield driver
     driver.quit()
-    logger.info(f"Closing the Browser: {browser}")
-    logger.info(f"ENDING TEST")
-    logger.info(f"==========================================")
+
+    logger.info(f'Closing browser: {browser}')
+    logger.info(f'ENDING TEST')
+    logger.info('================================================')
